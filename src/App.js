@@ -15,7 +15,7 @@ class App extends Component {
     trueAnswersArray: [],
     number: 0,
     counter: 0,
-    totalClicks: 0,
+    totalClicks: 10,
 }
 
 
@@ -50,7 +50,7 @@ noValidation = () => {
 })
 }
 
-gameRestart = () => {
+reStart = () => {
   this.setState({
       data: {},
       isLoading: true,
@@ -63,6 +63,7 @@ gameRestart = () => {
       counter: 0,
       totalClicks: 0
   })
+  this.componentDidMount()
 }
 
 
@@ -83,19 +84,25 @@ gameRestart = () => {
         })
       
         const questions = results.map((result) => {
-          return `${Object.values(result)[3]}`
+          const str = `${Object.values(result)[3]}`
+          return str.toString().replace(/[^a-zA-Z ]/g, "")
         })
 
         const fakeAnswers = results.map((result) => {
-          return `${Object.values(result)[5]}`
+          const str =  `${Object.values(result)[5]}`
+          return str.toString().replace(/[^a-zA-Z ]/g, "")
         })
 
         const fakeAnswersArrays  = fakeAnswers.map(answer => {
-          return answer.split(',')
+          const str = answer.split(',')
+          return str.toString().replace(/[^a-zA-Z ]/g, "")
+
         })        
 
         const trueAnswers = results.map((result) => {
-          return `${Object.values(result)[4]}`
+          const str  =`${Object.values(result)[4]}`
+          return str.toString().replace(/[^a-zA-Z ]/g, "")
+
         })
 
 
@@ -126,10 +133,12 @@ gameRestart = () => {
               <div onClick={this.answerValidation}>{this.state.trueAnswersArray[this.state.number]}</div>
             </div>
           </div>
-          :   <div>
-    <p>GAME ENDED YOU have points</p>
-    <button>RESTART</button>
-  </div>
+          :   <div id="endGamePage">
+                <h1>GAME ENDED</h1> 
+                <h2>YOU have</h2> 
+                <p>{this.state.counter} points</p>
+                <button onClick={this.reStart}>RESTART</button>
+              </div>
           }
       </div>
     );
