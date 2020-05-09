@@ -8,7 +8,6 @@ class App extends Component {
   state = {
     data: {},
     isLoading: true,
-//    dateCut: '', 
     dataKeys: [],
     dataValues: [],
     questionsArray: [],
@@ -19,39 +18,65 @@ class App extends Component {
     totalClicks: 0,
 }
 
-// displayFakeAnswers = () => {
-//   const display = this.state.fakeAnswersArray.map(answer => {
-//     return answer <br/>
-//   })
-// }
 
 setNumber = () => {
   return this.state.number + 1
 }
 
+direction = () => {
+   const flexDirection = ["row", "rowreverse"];
+   return flexDirection[Math.floor(Math.random() * 2)];
+}
+
+
 answerValidation = () => {
   const newCounter = this.state.counter + 1
+  const newClick = this.state.totalClicks + 1
   this.setState({
     counter: newCounter,
     number: this.setNumber(),
-    totalClicks: newCounter,
+    totalClicks: newClick,
+  })
+  }
+
+
+noValidation = () => {
+  const newCounter = this.state.counter + 1
+  const newClick = this.state.totalClicks + 1
+  this.setState({
+    number: this.setNumber(),
+    totalClicks: newClick,
+
+})
+}
+
+gameRestart = () => {
+  this.setState({
+      data: {},
+      isLoading: true,
+      dataKeys: [],
+      dataValues: [],
+      questionsArray: [],
+      fakeAnswersArray: [],
+      trueAnswersArray: [],
+      number: 0,
+      counter: 0,
+      totalClicks: 0
   })
 }
 
 
   async componentDidMount(){
       //insert the current date in the url so we only display 
-    const {data} = await axios(`https://opentdb.com/api.php?amount=10`)
+    const {data} = await axios(`https://opentdb.com/api.php?amount=10&type=boolean`)
 // go through all results (return objects)   
       const results = data.results
       console.log("RESULTS : " + results)
-        // for each result go through all keys (return an array of keys)
       const keys = results.map((result, i) => {
         return Object.keys(result)
       })
 
       console.log(keys)
-        // for each result go through all values (return an array of results)
 
         const values = results.map((result, i) => {
           return Object.values(result)
@@ -67,18 +92,14 @@ answerValidation = () => {
 
         const fakeAnswersArrays  = fakeAnswers.map(answer => {
           return answer.split(',')
-        })
-
-        console.log("KAAAAAK"  + fakeAnswers)
-        
-
+        })        
 
         const trueAnswers = results.map((result) => {
           return `${Object.values(result)[4]}`
         })
 
 
-    
+
           this.setState({
             data, 
             isLoading: false,
@@ -87,38 +108,28 @@ answerValidation = () => {
             questionsArray: questions,
             fakeAnswersArray: fakeAnswersArrays,
             trueAnswersArray: trueAnswers
-
-  //          categories: 
-  //          dateCut: data[data.length-1].data_inici.substr(0,10).split('-').join(',')
-      
           })
-
-          console.log(this.state.fakeAnswersArray[2])
-          // const datasArray = data.results.map((result, i) => {
-          //   return ({...result})
-          // })
-
         }
-
-
-
-    
 
 
 
   render(){
     return (
-      <div className="">
+      <div>
           {this.state.totalClicks < 10
           ? 
-          <Fragment>
-            <div>COUNTER : {this.state.counter}</div>
-            <h1>{this.state.questionsArray[this.state.number]}</h1>
-            {this.state.fakeAnswersArray[this.state.number]
-            }
-            <div onClick={this.answerValidation}>{this.state.trueAnswersArray[this.state.number]}</div>
-          </Fragment>
-          : <p>GAME ENDED YOu have {this.state.counter} points</p>
+          <div id="gameContainer">
+            <div id="counter">{this.state.counter}</div>
+            <div id="question">{this.state.questionsArray[this.state.number]}</div>
+            <div id="responsesContainer" class={this.direction()}>
+              <div onClick={this.noValidation}>{this.state.fakeAnswersArray[this.state.number]}</div>
+              <div onClick={this.answerValidation}>{this.state.trueAnswersArray[this.state.number]}</div>
+            </div>
+          </div>
+          :   <div>
+    <p>GAME ENDED YOU have points</p>
+    <button>RESTART</button>
+  </div>
           }
       </div>
     );
