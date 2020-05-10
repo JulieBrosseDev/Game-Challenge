@@ -1,6 +1,7 @@
 #endGamePage {
     padding: 70px 0;
-    text-align: center;
+    display: flex;
+    align-content: center ;
   }
   
   #endGamePage button {

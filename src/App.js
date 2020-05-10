@@ -118,7 +118,6 @@ reStart = () => {
   render(){
     return (
       <Fragment>
-      <h1>Guess The</h1>
           {this.state.totalClicks < 10
           ? 
           <Game 
