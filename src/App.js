@@ -1,6 +1,7 @@
 import {Component, Fragment} from 'react';
 import React from 'react';
-import Question from './components/Question';
+import Game from './components/Game';
+import EndPage from './components/EndPage';
 import axios from 'axios';
 import './App.css'
 
@@ -15,17 +16,12 @@ class App extends Component {
     trueAnswersArray: [],
     number: 0,
     counter: 0,
-    totalClicks: 10,
+    totalClicks: 0,
 }
 
 
 setNumber = () => {
   return this.state.number + 1
-}
-
-direction = () => {
-   const flexDirection = ["row", "rowreverse"];
-   return flexDirection[Math.floor(Math.random() * 2)];
 }
 
 
@@ -122,25 +118,22 @@ reStart = () => {
 
   render(){
     return (
-      <div>
-          {this.state.totalClicks < 10
+      <Fragment>
+        {this.state.totalClicks < 10
           ? 
-          <div id="gameContainer">
-            <div id="counter">{this.state.counter}</div>
-            <div id="question">{this.state.questionsArray[this.state.number]}</div>
-            <div id="responsesContainer" class={this.direction()}>
-              <div onClick={this.noValidation}>{this.state.fakeAnswersArray[this.state.number]}</div>
-              <div onClick={this.answerValidation}>{this.state.trueAnswersArray[this.state.number]}</div>
-            </div>
-          </div>
-          :   <div id="endGamePage">
-                <h1>GAME ENDED</h1> 
-                <h2>YOU have</h2> 
-                <p>{this.state.counter} points</p>
-                <button onClick={this.reStart}>RESTART</button>
-              </div>
-          }
-      </div>
+          <Game 
+          counter={this.state.counter} 
+          questionsArray={this.state.questionsArray} 
+          number={this.state.number} 
+          fakeAnswersArray={this.state.fakeAnswersArray} 
+          trueAnswersArray={this.state.trueAnswersArray} 
+          answerValidation={this.answerValidation}
+          noValidation={this.noValidation}    
+          />
+          
+          : <EndPage reStart={this.reStart} counter={this.state.counter} />   
+        }
+      </Fragment>
     );
   }
 }
