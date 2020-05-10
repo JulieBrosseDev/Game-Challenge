@@ -1,7 +1,6 @@
 import {Component, Fragment} from 'react';
 import React from 'react';
 import Game from './components/Game';
-import EndPage from './components/EndPage';
 import axios from 'axios';
 import './App.css'
 
@@ -119,7 +118,8 @@ reStart = () => {
   render(){
     return (
       <Fragment>
-        {this.state.totalClicks < 10
+      <h1>Guess The</h1>
+          {this.state.totalClicks < 10
           ? 
           <Game 
           counter={this.state.counter} 
@@ -131,8 +131,13 @@ reStart = () => {
           noValidation={this.noValidation}    
           />
           
-          : <EndPage reStart={this.reStart} counter={this.state.counter} />   
-        }
+          :   <div id="endGamePage">
+                <h1>GAME ENDED</h1> 
+                <h2>YOU have</h2> 
+                <p>{this.state.counter} points</p>
+                <button onClick={this.reStart}>RESTART</button>
+              </div>
+          }
       </Fragment>
     );
   }
