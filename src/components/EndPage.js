@@ -1,5 +1,5 @@
 import React from 'react';
-import './EndPage'
+import './EndPage.css'
 
 export default function EndPage(props) {
     return(

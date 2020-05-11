@@ -1,6 +1,7 @@
 import {Component, Fragment} from 'react';
 import React from 'react';
 import Game from './components/Game';
+import EndPage from './components/EndPage';
 import axios from 'axios';
 import './App.css'
 
@@ -8,8 +9,6 @@ class App extends Component {
   state = {
     data: {},
     isLoading: true,
-    dataKeys: [],
-    dataValues: [],
     questionsArray: [],
     fakeAnswersArray: [],
     trueAnswersArray: [],
@@ -18,12 +17,12 @@ class App extends Component {
     totalClicks: 0,
 }
 
-
+//CHANGE THE QUESTION NUMBER TO GO TO THE NEXT ONE
 setNumber = () => {
   return this.state.number + 1
 }
 
-
+// WHEN RIGHT ANSWER : INCREASE BOTH NUMBER OF CLICKS AND COUNTER AND CHANGE THE QUESTION NUMBER (TO GO TO THE NEXT ONE)
 answerValidation = () => {
   const newCounter = this.state.counter + 1
   const newClick = this.state.totalClicks + 1
@@ -34,7 +33,7 @@ answerValidation = () => {
   })
   }
 
-
+// WHEN FALSE ANSWER : INCREASE NUMBER OF CLICKS AND CHANGE THE QUESTION NUMBER (TO GO TO THE NEXT ONE)
 noValidation = () => {
   const newCounter = this.state.counter + 1
   const newClick = this.state.totalClicks + 1
@@ -49,8 +48,6 @@ reStart = () => {
   this.setState({
       data: {},
       isLoading: true,
-      dataKeys: [],
-      dataValues: [],
       questionsArray: [],
       fakeAnswersArray: [],
       trueAnswersArray: [],
@@ -63,55 +60,37 @@ reStart = () => {
 
 
   async componentDidMount(){
-      //insert the current date in the url so we only display 
-    const {data} = await axios(`https://opentdb.com/api.php?amount=10&type=boolean`)
-// go through all results (return objects)   
-      const results = data.results
-      console.log("RESULTS : " + results)
-      const keys = results.map((result, i) => {
-        return Object.keys(result)
-      })
-
-      console.log(keys)
-
-        const values = results.map((result, i) => {
-          return Object.values(result)
-        })
+    const {data} = await axios(`https://opentdb.com/api.php?amount=10&type=boolean`)  
+    const results = data.results
       
-        const questions = results.map((result) => {
-          const str = `${Object.values(result)[3]}`
-          return str.toString().replace(/[^a-zA-Z ]/g, "")
-        })
+    const questions = results.map((result) => {
+      const str = `${Object.values(result)[3]}`
+      return str.toString().replace(/[^a-zA-Z ]/g, "")
+    })
 
-        const fakeAnswers = results.map((result) => {
-          const str =  `${Object.values(result)[5]}`
-          return str.toString().replace(/[^a-zA-Z ]/g, "")
-        })
+    const fakeAnswers = results.map((result) => {
+      const str =  `${Object.values(result)[5]}`
+      return str.toString().replace(/[^a-zA-Z ]/g, "")
+    })
 
-        const fakeAnswersArrays  = fakeAnswers.map(answer => {
-          const str = answer.split(',')
-          return str.toString().replace(/[^a-zA-Z ]/g, "")
+    const fakeAnswersArrays  = fakeAnswers.map(answer => {
+      const str = answer.split(',')
+      return str.toString().replace(/[^a-zA-Z ]/g, "")
+    })        
 
-        })        
+    const trueAnswers = results.map((result) => {
+      const str  =`${Object.values(result)[4]}`
+      return str.toString().replace(/[^a-zA-Z ]/g, "")
+    })
 
-        const trueAnswers = results.map((result) => {
-          const str  =`${Object.values(result)[4]}`
-          return str.toString().replace(/[^a-zA-Z ]/g, "")
-
-        })
-
-
-
-          this.setState({
-            data, 
-            isLoading: false,
-            dataKeys: keys,
-            dataValues: values,
-            questionsArray: questions,
-            fakeAnswersArray: fakeAnswersArrays,
-            trueAnswersArray: trueAnswers
-          })
-        }
+    this.setState({
+      data, 
+      isLoading: false,
+      questionsArray: questions,
+      fakeAnswersArray: fakeAnswersArrays,
+      trueAnswersArray: trueAnswers
+    })
+  }
 
 
 
@@ -130,13 +109,8 @@ reStart = () => {
           noValidation={this.noValidation}    
           />
           
-          :   <div id="endGamePage">
-                <h1>GAME ENDED</h1> 
-                <h2>YOU have</h2> 
-                <p>{this.state.counter} points</p>
-                <button onClick={this.reStart}>RESTART</button>
-              </div>
-          }
+          : <EndPage counter={this.state.counter} reStart={this.reStart}/>
+        }
       </Fragment>
     );
   }

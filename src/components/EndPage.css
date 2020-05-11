@@ -1,9 +1,27 @@
 #endGamePage {
     padding: 70px 0;
-    display: flex;
+    text-align: center;
     align-content: center ;
-  }
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+}
+
+
   
   #endGamePage button {
+    color: white;
     cursor: pointer;
+    font-size: 30px;
+    background-color: orangered;
+    height: 150px;
+    width: 150px;
+    border-radius: 5px;
+  }
+
+  #endGamePage button:hover {
+  -webkit-box-shadow: -2px 10px 60px -7px rgba(100,98,112,1);
+  -moz-box-shadow: -2px 10px 60px -7px rgba(100,98,112,1);
+  box-shadow: -2px 10px 60px -7px rgba(100,98,112,1);
   }
